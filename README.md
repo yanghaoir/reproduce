@@ -19,7 +19,9 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-**flash-attn**：与 CUDA / PyTorch 版本绑定较紧，`pip` 源码编译容易失败。若安装报错，请改用与当前 CUDA、PyTorch 匹配的预编译 wheel（或按官方文档从源码安装）。
+**flash-attn**：与 CUDA / PyTorch 版本绑定较紧，`pip` 源码编译容易失败。若安装报错，请改用与当前 CUDA、PyTorch 匹配的预编译 wheel 安装。
+
+[v2.6.3+cu118torch2.4+cp310（Linux x86_64）](https://github.com/Dao-AILab/flash-attention/releases/download/v2.6.3/flash_attn-2.6.3+cu118torch2.4cxx11abiFALSE-cp310-cp310-linux_x86_64.whl)
 
 ## 训练
 
