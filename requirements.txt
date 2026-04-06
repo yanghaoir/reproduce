@@ -1,0 +1,25 @@
+# Python 3.10；与当前 reproduce 环境 pip freeze 对齐的核心版本。
+# 无 NVIDIA GPU 或无法安装 faiss-gpu 时，可改为 faiss-cpu（版本需自行查阅 PyPI）。
+torch==2.4.0
+torchvision==0.19.0
+transformers==4.57.6
+tokenizers==0.22.2
+accelerate==1.12.0
+datasets==4.7.0
+peft==0.11.1
+deepspeed==0.14.5
+wandb==0.17.7
+numpy==1.26.4
+tqdm==4.67.3
+pillow==12.1.1
+huggingface_hub==0.36.2
+safetensors==0.7.0
+PyYAML==6.0.2
+sentencepiece==0.2.1
+einops==0.8.1
+faiss-gpu==1.7.2
+pyserini==0.44.0
+pytrec_eval-terrier==0.5.10
+qwen-vl-utils==0.0.14
+# 若 pip 安装失败，请使用与 CUDA/torch 匹配的预编译 wheel 安装同版本或兼容版本。
+flash-attn==2.6.3
