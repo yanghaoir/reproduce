@@ -23,6 +23,12 @@ pip install -e .
 
 [v2.6.3+cu118torch2.4+cp310（Linux x86_64）](https://github.com/Dao-AILab/flash-attention/releases/download/v2.6.3/flash_attn-2.6.3+cu118torch2.4cxx11abiFALSE-cp310-cp310-linux_x86_64.whl)
 
+## 数据与模型路径
+
+config/dir_config.sh 是模型与数据目录配置文件，请根据文件内容下配置路径，注释里有下载地址。
+
+所有数据、checkpoint 的绝对路径集中在 [`config/dir_config.sh`](config/dir_config.sh)，修改路径只需编辑此一处。
+
 ## 训练
 
 日志目录若不存在请先创建：

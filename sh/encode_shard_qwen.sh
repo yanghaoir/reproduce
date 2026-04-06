@@ -17,19 +17,17 @@ NUM_SHARDS=$4
 SHARD_INDEX=$5
 BATCH_SIZE=${6:-2}
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "${REPO_DIR}"
 
 eval "$(conda shell.bash hook)"
 conda activate reproduce
 
-# 路径配置 — Qwen
-# https://huggingface.co/datasets/NTT-hil-insight/OpenDocVQA-Corpus
-CORPUS_PATH=/mnt1/open_source/datas/realign/OpenDocVQA-Corpus
-
-# https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct
-QWEN=/mnt1/open_source/models/Qwen2.5-VL-7B-Instruct
+# shellcheck source=config/dir_config.sh
+source "${REPO_DIR}/config/dir_config.sh"
+CORPUS_PATH="${VDOC_OPEN_DOC_VQA_CORPUS_ROOT}"
+QWEN="${VDOC_QWEN_MODEL_DIR}"
 EMBEDDING_OUTPUT_DIR="${REPO_DIR}/emb/${MODEL}"
 LORA="${REPO_DIR}/outputs/${MODEL}"
 

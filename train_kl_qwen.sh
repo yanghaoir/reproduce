@@ -2,7 +2,11 @@
 # Qwen2.5-VL 训练脚本（KL散度 + 对比学习）
 # 基于 train_kl.sh，适配 Qwen2.5-VL-7B-Instruct
 
-cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "${REPO_DIR}"
+# shellcheck source=config/dir_config.sh
+source "${REPO_DIR}/config/dir_config.sh"
+
 eval "$(conda shell.bash hook)"
 conda activate reproduce
 
@@ -11,20 +15,21 @@ unset CUDA_VISIBLE_DEVICES
 # ============================================================
 # 基础配置
 # ============================================================
-export GPU=1
-export MODEL=lamda-0.2-1epoch_qwen
-export MODEL_PATH=/mnt1/open_source/models/Qwen2.5-VL-7B-Instruct
-# Qwen 从头训练，不加载预训练 LoRA
-export LORA_PATH=""
-export DATASET_PATH=/mnt1/yanghao/data/NTT-hil-insight/buchong
-export CORPUS_PATH=/mnt1/yanghao/data/NTT-hil-insight/OpenDocVQA-Corpus/data
+export GPU=0,1,2,3
+export MODEL=realign-qwen
+export MODEL_PATH="${VDOC_QWEN_MODEL_DIR}"
+export LORA_PATH="${VDOC_QWEN_LORA_PATH}"
+export DATASET_PATH="${VDOC_TRAIN_DATASET_PATH}"
+export CORPUS_PATH="${VDOC_TRAIN_CORPUS_PATH}"
 export OUTPUT_DIR=outputs/${MODEL}
 
 # ============================================================
-# 训练模式配置
+# 训练参数配置
 # ============================================================
-export TRAINING_MODE=mixed
 export KL_LOSS_WEIGHT=0.2
+
+# 遗留代码，无需改动
+export TRAINING_MODE=mixed
 export IMAGE_SAMPLE_STRATEGY=random
 
 echo "============================================================"
@@ -35,10 +40,7 @@ echo "LORA_PATH: ${LORA_PATH}"
 echo "DATASET_PATH: ${DATASET_PATH}"
 echo "CORPUS_PATH: ${CORPUS_PATH}"
 echo "OUTPUT_DIR: ${OUTPUT_DIR}"
-echo ""
-echo "训练模式: ${TRAINING_MODE}"
 echo "KL Loss权重: ${KL_LOSS_WEIGHT}"
-echo "图像采样策略: ${IMAGE_SAMPLE_STRATEGY}"
 echo "============================================================"
 
 # ============================================================

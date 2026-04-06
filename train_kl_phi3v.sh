@@ -1,5 +1,9 @@
 #!/bin/bash
-cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "${REPO_DIR}"
+# shellcheck source=config/dir_config.sh
+source "${REPO_DIR}/config/dir_config.sh"
+
 eval "$(conda shell.bash hook)"
 conda activate reproduce
 
@@ -11,16 +15,10 @@ unset CUDA_VISIBLE_DEVICES
 export GPU=0,1,2,3
 export MODEL=realign-phi3v
 
-# https://huggingface.co/microsoft/Phi-3-vision-128k-instruct
-export MODEL_PATH=/mnt1/open_source/datas/realign/Phi3
-
-# https://huggingface.co/NTT-hil-insight/VDocRetriever-Phi3-vision-pretrained
-export LORA_PATH=/mnt1/open_source/datas/realign/VDocRetriever-Phi3-vision-pretrained
-
-# https://huggingface.co/datasets/NTT-hil-insight/OpenDocVQA-Corpus/tree/main/data
-export CORPUS_PATH=/mnt1/open_source/datas/realign/OpenDocVQA-Corpus/data
-
-export DATASET_PATH=train_data
+export MODEL_PATH="${VDOC_PHI3_MODEL_DIR}"
+export LORA_PATH="${VDOC_PHI3_LORA_PRETRAINED_DIR}"
+export CORPUS_PATH="${VDOC_TRAIN_CORPUS_PATH}"
+export DATASET_PATH="${VDOC_TRAIN_DATASET_PATH}"
 export OUTPUT_DIR=outputs/${MODEL}
 
 

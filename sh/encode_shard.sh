@@ -17,7 +17,7 @@ NUM_SHARDS=$4
 SHARD_INDEX=$5
 BATCH_SIZE=${6:-2}
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "${REPO_DIR}"
 
@@ -25,12 +25,10 @@ cd "${REPO_DIR}"
 eval "$(conda shell.bash hook)"
 conda activate reproduce
 
-# 路径配置
-# https://huggingface.co/datasets/NTT-hil-insight/OpenDocVQA-Corpus
-CORPUS_PATH=/mnt1/open_source/datas/realign/OpenDocVQA-Corpus
-
-# https://huggingface.co/microsoft/Phi-3-vision-128k-instruct
-PHI3=/mnt1/open_source/datas/realign/Phi3
+# shellcheck source=config/dir_config.sh
+source "${REPO_DIR}/config/dir_config.sh"
+CORPUS_PATH="${VDOC_OPEN_DOC_VQA_CORPUS_ROOT}"
+PHI3="${VDOC_PHI3_MODEL_DIR}"
 
 EMBEDDING_OUTPUT_DIR="${REPO_DIR}/emb/${MODEL}"
 LORA="${REPO_DIR}/outputs/${MODEL}"

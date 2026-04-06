@@ -15,7 +15,7 @@ export CUDA_VISIBLE_DEVICES=$1
 MODEL=$2
 DATASET=$3
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "${REPO_DIR}"
 
@@ -23,9 +23,9 @@ cd "${REPO_DIR}"
 eval "$(conda shell.bash hook)"
 conda activate reproduce
 
-# 路径配置
-# https://huggingface.co/datasets/NTT-hil-insight/OpenDocVQA
-QUERY_PATH=/mnt1/open_source/datas/realign/OpenDocVQA
+# shellcheck source=config/dir_config.sh
+source "${REPO_DIR}/config/dir_config.sh"
+QUERY_PATH="${VDOC_OPEN_DOC_VQA_DIR}"
 
 EMBEDDING_OUTPUT_DIR="${REPO_DIR}/emb/${MODEL}"
 RESULT_DIR="${REPO_DIR}/result/${MODEL}"
