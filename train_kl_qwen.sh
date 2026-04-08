@@ -1,10 +1,6 @@
 #!/bin/bash
-# Qwen2.5-VL 训练脚本（KL散度 + 对比学习）
-# 基于 train_kl.sh，适配 Qwen2.5-VL-7B-Instruct
-
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${REPO_DIR}"
-# shellcheck source=config/dir_config.sh
 source "${REPO_DIR}/config/dir_config.sh"
 
 eval "$(conda shell.bash hook)"
@@ -12,41 +8,30 @@ conda activate reproduce
 
 unset CUDA_VISIBLE_DEVICES
 
-# ============================================================
-# 基础配置
-# ============================================================
 export GPU=0,1,2,3
 export MODEL=realign-qwen
-export MODEL_PATH="${VDOC_QWEN_MODEL_DIR}"
-export LORA_PATH="${VDOC_QWEN_LORA_PATH}"
-export DATASET_PATH="${VDOC_TRAIN_DATASET_PATH}"
-export CORPUS_PATH="${VDOC_TRAIN_CORPUS_PATH}"
+export MODEL_PATH="${REALIGN_QWEN_MODEL_DIR}"
+export LORA_PATH="${REALIGN_QWEN_LORA_PATH}"
+export DATASET_PATH="${REALIGN_TRAIN_DATASET_PATH}"
+export CORPUS_PATH="${REALIGN_TRAIN_CORPUS_PATH}"
 export OUTPUT_DIR=outputs/${MODEL}
 
-# ============================================================
-# 训练参数配置
-# ============================================================
 export KL_LOSS_WEIGHT=0.2
-
-# 遗留代码，无需改动
 export TRAINING_MODE=mixed
 export IMAGE_SAMPLE_STRATEGY=random
 
 echo "============================================================"
-echo "Qwen2.5-VL 训练配置"
+echo "Qwen2.5-VL Training Config"
 echo "============================================================"
 echo "MODEL_PATH: ${MODEL_PATH}"
 echo "LORA_PATH: ${LORA_PATH}"
 echo "DATASET_PATH: ${DATASET_PATH}"
 echo "CORPUS_PATH: ${CORPUS_PATH}"
 echo "OUTPUT_DIR: ${OUTPUT_DIR}"
-echo "KL Loss权重: ${KL_LOSS_WEIGHT}"
+echo "KL Loss weight: ${KL_LOSS_WEIGHT}"
 echo "============================================================"
 
-# ============================================================
-# 开始训练
-# ============================================================
-deepspeed --include localhost:${GPU} --master_port 12346 --module vdocrag.vdocretriever.driver.train \
+deepspeed --include localhost:${GPU} --master_port 12346 --module realign.realignretriever.driver.train \
   --deepspeed deepspeed/ds_zero3_config.json \
   --output_dir ${OUTPUT_DIR} \
   --model_name_or_path ${MODEL_PATH} \
@@ -76,5 +61,5 @@ deepspeed --include localhost:${GPU} --master_port 12346 --module vdocrag.vdocre
   --image_sample_strategy ${IMAGE_SAMPLE_STRATEGY}
 
 echo ""
-echo "训练完成！"
-echo "输出目录: ${OUTPUT_DIR}"
+echo "Training complete!"
+echo "Output dir: ${OUTPUT_DIR}"

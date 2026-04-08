@@ -1,57 +1,53 @@
-# Reproduce
+# ReAlign
 
-多模态文档检索训练与评估的复现说明。
+Training and evaluation of the multimodal document retriever ReAlign.
 
-## 环境
+## Environment
 
-进入项目根目录后创建并激活 Conda 环境（Python 3.10）：
+From the project root, create and activate a Conda environment (Python 3.10):
 
 ```bash
-cd reproduce
-conda create -n reproduce python=3.10 -y
-conda activate reproduce
+cd realign
+conda create -n realign python=3.10 -y
+conda activate realign
 ```
 
-安装依赖与可编辑包：
+Install dependencies and the editable package:
 
 ```bash
 pip install -r requirements.txt
 pip install -e .
 ```
 
-**flash-attn**：与 CUDA / PyTorch 版本绑定较紧，`pip` 源码编译容易失败。若安装报错，请改用与当前 CUDA、PyTorch 匹配的预编译 wheel 安装。
+## Data and Model Paths
 
-[v2.6.3+cu118torch2.4+cp310（Linux x86_64）](https://github.com/Dao-AILab/flash-attention/releases/download/v2.6.3/flash_attn-2.6.3+cu118torch2.4cxx11abiFALSE-cp310-cp310-linux_x86_64.whl)
+`config/dir_config.sh` is the configuration file for model and data directories. Please download the required assets and set the paths according to the instructions in that file.
 
-## 数据与模型路径
+All absolute paths for data and checkpoints are centralized in [`config/dir_config.sh`](config/dir_config.sh). Updating a path only requires editing that single file.
 
-config/dir_config.sh 是模型与数据目录配置文件，请根据文件内容下配置路径，注释里有下载地址。
+## Training
 
-所有数据、checkpoint 的绝对路径集中在 [`config/dir_config.sh`](config/dir_config.sh)，修改路径只需编辑此一处。
-
-## 训练
-
-日志目录若不存在请先创建：
+Create the log directory if it does not exist:
 
 ```bash
 mkdir -p log
 ```
 
-Phi-3 Vision 训练示例：
+Phi-3 Vision training example:
 
 ```bash
 bash train_kl_phi3v.sh > log/realign-phi3v.log 2>&1
 ```
 
-Qwen 训练示例（按需启用）：
+Qwen training example (enable as needed):
 
 ```bash
 bash train_kl_qwen.sh > log/realign-qwen.log 2>&1
 ```
 
-## 评估
+## Evaluation
 
-评估脚本中第二个参数为 GPU ID 列表（逗号分隔）。以下为四卡示例，可按机器实际情况增删或改为单卡（例如 `0`）。
+The second argument of each evaluation script is a comma-separated list of GPU IDs. The examples below use four GPUs; adjust to match your hardware (e.g. use `0` for a single GPU).
 
 ```bash
 bash sh/eval.sh realign-phi3v 0,1,2,3

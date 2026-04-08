@@ -1,12 +1,8 @@
 #!/bin/bash
-# ------------------------------------------------------------------
-# 编码 query (在指定 GPU 上运行)
-# 用法: bash encode_query.sh <GPU_ID> <MODEL> <DATASET> [BATCH_SIZE]
-# ------------------------------------------------------------------
 set -e
 
 if [ "$#" -lt 3 ]; then
-    echo "用法: $0 <GPU_ID> <MODEL> <DATASET> [BATCH_SIZE]"
+    echo "Usage: $0 <GPU_ID> <MODEL> <DATASET> [BATCH_SIZE]"
     exit 1
 fi
 
@@ -19,14 +15,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "${REPO_DIR}"
 
-# 激活 conda 环境 (本项目使用 vdoc)
 eval "$(conda shell.bash hook)"
 conda activate reproduce
 
-# shellcheck source=config/dir_config.sh
 source "${REPO_DIR}/config/dir_config.sh"
-QUERY_PATH="${VDOC_OPEN_DOC_VQA_DIR}"
-PHI3="${VDOC_PHI3_MODEL_DIR}"
+QUERY_PATH="${REALIGN_OPEN_DOC_VQA_DIR}"
+PHI3="${REALIGN_PHI3_MODEL_DIR}"
 
 EMBEDDING_OUTPUT_DIR="${REPO_DIR}/emb/${MODEL}"
 LORA="${REPO_DIR}/outputs/${MODEL}"
@@ -35,7 +29,7 @@ mkdir -p "${EMBEDDING_OUTPUT_DIR}"
 
 echo "[Query] GPU=${CUDA_VISIBLE_DEVICES} Dataset=${DATASET} BatchSize=${BATCH_SIZE}"
 
-python -m vdocrag.vdocretriever.driver.encode \
+python -m realign.realignretriever.driver.encode \
   --output_dir=temp \
   --model_name_or_path ${PHI3} \
   --lora_name_or_path ${LORA} \
@@ -52,4 +46,4 @@ python -m vdocrag.vdocretriever.driver.encode \
   --dataset_split test \
   --encode_output_path "${EMBEDDING_OUTPUT_DIR}/query-${DATASET}.pkl"
 
-echo "[Query] ${DATASET} 编码完成。"
+echo "[Query] ${DATASET} encoding done."

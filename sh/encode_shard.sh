@@ -1,12 +1,8 @@
 #!/bin/bash
-# ------------------------------------------------------------------
-# 编码单个 corpus 分片 (在指定 GPU 上运行)
-# 用法: bash encode_shard.sh <GPU_ID> <MODEL> <DATASET> <NUM_SHARDS> <SHARD_INDEX> [BATCH_SIZE]
-# ------------------------------------------------------------------
 set -e
 
 if [ "$#" -lt 5 ]; then
-    echo "用法: $0 <GPU_ID> <MODEL> <DATASET> <NUM_SHARDS> <SHARD_INDEX> [BATCH_SIZE]"
+    echo "Usage: $0 <GPU_ID> <MODEL> <DATASET> <NUM_SHARDS> <SHARD_INDEX> [BATCH_SIZE]"
     exit 1
 fi
 
@@ -21,14 +17,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 cd "${REPO_DIR}"
 
-# 激活 conda 环境
 eval "$(conda shell.bash hook)"
 conda activate reproduce
 
-# shellcheck source=config/dir_config.sh
 source "${REPO_DIR}/config/dir_config.sh"
-CORPUS_PATH="${VDOC_OPEN_DOC_VQA_CORPUS_ROOT}"
-PHI3="${VDOC_PHI3_MODEL_DIR}"
+CORPUS_PATH="${REALIGN_OPEN_DOC_VQA_CORPUS_ROOT}"
+PHI3="${REALIGN_PHI3_MODEL_DIR}"
 
 EMBEDDING_OUTPUT_DIR="${REPO_DIR}/emb/${MODEL}"
 LORA="${REPO_DIR}/outputs/${MODEL}"
@@ -37,7 +31,7 @@ mkdir -p "${EMBEDDING_OUTPUT_DIR}"
 
 echo "[Shard ${SHARD_INDEX}/${NUM_SHARDS}] GPU=${CUDA_VISIBLE_DEVICES} Dataset=${DATASET} BatchSize=${BATCH_SIZE}"
 
-python -m vdocrag.vdocretriever.driver.encode \
+python -m realign.realignretriever.driver.encode \
   --output_dir=temp \
   --model_name_or_path ${PHI3} \
   --lora_name_or_path ${LORA} \
@@ -54,4 +48,4 @@ python -m vdocrag.vdocretriever.driver.encode \
   --dataset_shard_index ${SHARD_INDEX} \
   --encode_output_path "${EMBEDDING_OUTPUT_DIR}/corpus.${DATASET}.${SHARD_INDEX}.pkl"
 
-echo "[Shard ${SHARD_INDEX}/${NUM_SHARDS}] 完成。"
+echo "[Shard ${SHARD_INDEX}/${NUM_SHARDS}] Done."

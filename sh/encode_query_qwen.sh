@@ -1,12 +1,8 @@
 #!/bin/bash
-# ------------------------------------------------------------------
-# Qwen2.5-VL: 编码 query (在指定 GPU 上运行)
-# 用法: bash encode_query_qwen.sh <GPU_ID> <MODEL> <DATASET> [BATCH_SIZE]
-# ------------------------------------------------------------------
 set -e
 
 if [ "$#" -lt 3 ]; then
-    echo "用法: $0 <GPU_ID> <MODEL> <DATASET> [BATCH_SIZE]"
+    echo "Usage: $0 <GPU_ID> <MODEL> <DATASET> [BATCH_SIZE]"
     exit 1
 fi
 
@@ -22,10 +18,9 @@ cd "${REPO_DIR}"
 eval "$(conda shell.bash hook)"
 conda activate reproduce
 
-# shellcheck source=config/dir_config.sh
 source "${REPO_DIR}/config/dir_config.sh"
-QUERY_PATH="${VDOC_OPEN_DOC_VQA_DIR}"
-QWEN="${VDOC_QWEN_MODEL_DIR}"
+QUERY_PATH="${REALIGN_OPEN_DOC_VQA_DIR}"
+QWEN="${REALIGN_QWEN_MODEL_DIR}"
 
 EMBEDDING_OUTPUT_DIR="${REPO_DIR}/emb/${MODEL}"
 LORA="${REPO_DIR}/outputs/${MODEL}"
@@ -34,7 +29,7 @@ mkdir -p "${EMBEDDING_OUTPUT_DIR}"
 
 echo "[Query] GPU=${CUDA_VISIBLE_DEVICES} Dataset=${DATASET} BatchSize=${BATCH_SIZE}"
 
-python -m vdocrag.vdocretriever.driver.encode \
+python -m realign.realignretriever.driver.encode \
   --output_dir=temp \
   --model_name_or_path ${QWEN} \
   --lora_name_or_path ${LORA} \
@@ -51,4 +46,4 @@ python -m vdocrag.vdocretriever.driver.encode \
   --dataset_split test \
   --encode_output_path "${EMBEDDING_OUTPUT_DIR}/query-${DATASET}.pkl"
 
-echo "[Query] ${DATASET} 编码完成。"
+echo "[Query] ${DATASET} encoding done."
