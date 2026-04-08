@@ -55,7 +55,7 @@ deepspeed --include localhost:${GPU} --master_port 12346 --module realign.realig
   --logging_steps 10 \
   --overwrite_output_dir \
   --gradient_accumulation_steps 4 \
-  --report_to none \
+  --report_to wandb \
   --training_mode ${TRAINING_MODE} \
   --kl_loss_weight ${KL_LOSS_WEIGHT} \
   --image_sample_strategy ${IMAGE_SAMPLE_STRATEGY}
